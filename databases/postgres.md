@@ -37,9 +37,29 @@ postgres=#
 
 ## Set password for postgres database user
 
-The password for the `postgres` database user can be set the the quickcommand `\password`
+The password for the `postgres` database user can be set the the quick command `\password`
 or by `alter user postgres password 'Supersecret'`. A connection using the `postgres` user
 is still not possible from the "outside" hence to the default settings in the `pg_hba.conf`.
+## Restrict Users from accessing other Databases
+
+At the SQL level, every user can indeed connect to a newly created database, until the following SQL command is issued:
+
+```sql
+REVOKE connect ON DATABASE database_name FROM PUBLIC;
+```
+
+Once done, each user or role that should be able to connect has to be granted explicitly the connect privilege:
+
+```sql
+GRANT connect ON DATABASE database_name TO rolename;
+```
+To set this setting for all future databases, revoke CONNECT on the template0/1 database (default template database for creating a new database):
+
+```sql
+REVOKE CONNECT ON DATABASE template1 FROM PUBLIC;
+```
+
+In a multi-tenant scenario, more than just the `connect` privilege would be removed. For multi-tenancy tips and best practices, you may want to read on the postgresql public wiki: [Shared Database Hosting](http://wiki.postgresql.org/wiki/Shared_Database_Hosting) and [Managing rights in PostgreSQL](http://wiki.postgresql.org/images/d/d1/Managing_rights_in_postgresql.pdf).
 
 ### Update pg_hba.conf to allow postgres user connections with password
 

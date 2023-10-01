@@ -9,3 +9,5 @@ sudo nft list table inet filter
 ```
 
 use ``-a`` to view handles for each rule
+
+To setup port forwarding
